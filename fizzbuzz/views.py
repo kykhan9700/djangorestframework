@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, serializers, permissions
 from fizzbuzz.models import FizzBuzz
-from fizzbuzz.serializers import UserSerializer, GroupSerializer
-from fizzbuzz.serializers import FizzBuzzSerializer
-from django.http import HttpResponse, JsonResponse
+from fizzbuzz.serializers import UserSerializer, GroupSerializer, FizzBuzzSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -23,18 +24,36 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-# class FizzBuzzViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows FizzBuzz to be viewed or edited.
-#     """
-#     print('test 2'+str(FizzBuzzSerializer.data.getter('message')))
-#     queryset = FizzBuzz.objects.all()
-#     serializer_class = FizzBuzzSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
+@api_view(['GET'])
+def apiOverview(request):
+    api_urls = {
+        'List' : '/fizzbuzz/',
+        'List Detail' : '/fizzbuzz/<str:pk>',
+        'Create' : '/fizzbuzz/'
+    }
+    return Response(api_urls)
 
-def fizzbuzz_list(request):
+@api_view(['GET','POST'])
+def fizzbuzzList(request):
     if request.method == 'GET':
         fizzbuzz = FizzBuzz.objects.all()
-        serializer = FizzBuzzSerializer(fizzbuzz,many = True)    
-        return JsonResponse(serializer.data, safe = False)
+        serializer_class = FizzBuzzSerializer(fizzbuzz,many=True)
+         
+    if request.method == 'POST':
+        print(request.META['HTTP_USER_AGENT'])
+        print(request.data)
+        user_agent = request.META['HTTP_USER_AGENT']
+        creation_date = serializers.timezone.now()
+        serializer_class = FizzBuzzSerializer(data={'user_agent':user_agent,'creation_date':creation_date,'message':request.data['message']})
+
+        if serializer_class.is_valid():
+            serializer_class.save()
+
+    return Response(serializer_class.data)     
+
+
+@api_view(['GET'])
+def fizzbuzzDetail(request,pk):
+    fizzbuzz = FizzBuzz.objects.get(fizzbuzz_id = pk)
+    serializer_class = FizzBuzzSerializer(fizzbuzz,many=False)
+    return Response(serializer_class.data)  

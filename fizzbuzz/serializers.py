@@ -15,20 +15,8 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
-# class FizzBuzzSerializer(serializers.HyperlinkedModelSerializer):
-#     creation_date = serializers.timezone.now()
-#     # user_agent = serializers.CharField(source = "test")
-#     print('jai telangana')
-#     print(serializers)
-#     class Meta:
-#         model = FizzBuzz
-#         fields = ['fizzbuzz_id','message','creation_date','user_agent']   
-
 
 class FizzBuzzSerializer(serializers.ModelSerializer):
-    creation_date = serializers.timezone.now()
-    # user_agent = serializers.CharField(source = "test")
     class Meta:
         model = FizzBuzz
         fields = ['fizzbuzz_id','message','creation_date','user_agent']   
-
