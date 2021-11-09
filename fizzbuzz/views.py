@@ -35,6 +35,9 @@ def apiOverview(request):
 
 @api_view(['GET','POST'])
 def fizzbuzzList(request):
+    """
+    API endpoint that allows fizzbuzz to be Listed or Created.
+    """
     if request.method == 'GET':
         fizzbuzz = FizzBuzz.objects.all()
         serializer_class = FizzBuzzSerializer(fizzbuzz,many=True)
@@ -54,6 +57,9 @@ def fizzbuzzList(request):
 
 @api_view(['GET'])
 def fizzbuzzDetail(request,pk):
+    """
+    API endpoint that allows fizzbuzz to be Listed by fizzbuzz_id.
+    """
     fizzbuzz = FizzBuzz.objects.get(fizzbuzz_id = pk)
     serializer_class = FizzBuzzSerializer(fizzbuzz,many=False)
     return Response(serializer_class.data)  
