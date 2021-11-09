@@ -40,7 +40,7 @@ Once the user is created we can now run the server.
 python3 manage.py runserver
 ```
 
-We can now access our API, both from the command-line, using tools like postman or Or directly through the browser, by going to the URL http://127.0.0.1:8000/fizzbuzz
+We can now access our API, both from the command-line, using tools like postman or Or directly through the browser, by going to the URL http://127.0.0.1:8000/api/fizzbuzz/
 
 If you're working through the browser, make sure to login using the control in the top right corner.
 
